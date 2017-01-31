@@ -1,12 +1,91 @@
 
 var strData = loadFile("/members.csv");
 var membersArray = CSVToArray(strData);
-var SquareArray = CSVToArray(loadFile('/squareorders.csv'));
-console.log(membersArray);
-console.log(SquareArray);
+var squareArray = CSVToArray(loadFile('/squareorders.csv'));
+var targetF = "Neil";
+var targetL = "Bhatia"
+// console.log(membersArray);
+// console.log(SquareArray);
+
+const memberNameIndex = 1; // Just the first name
+const squareNameIndex = 11; // Full name
+
+var results = [false, false];
+var resultsArray = [];
+// console.log(squareArray);
+
+compareCSV(targetF, targetL);
 
 
+function compareCSV(targetF, targetL) {
+    
+    /* Search in our database */
+    searchMembers(membersArray, targetF, targetL);
+    searchSquare(squareArray, targetF, targetL);
+    var response = processResults(results, resultsArray);
+    console.log(response);
+    console.log(results);
 
+    /* Reset */
+    results = [false, false];
+    resultsArray = [];
+
+}
+
+function processResults() {
+    var response = "";
+    if (results[0] == true) {
+        response += "Person has registered in the database\n";
+    } else {
+        response += "Person has NOT registered in the database\n";
+    }
+
+    if (results[1] == true) {
+        response += "Person has purchased membership on square";
+    } else {
+        response += "Person has NOT purchased membership on square";
+    }
+    console.log
+    return response;
+}
+
+function searchMembers(membersArray, targetF, targetL) {
+    membersArray.forEach((currentMember) => {
+        if (membersArray[memberNameIndex] !== null && membersArray[memberNameIndex + 1] !== null) {
+            var currentFirst = currentMember[memberNameIndex];
+            var currentLast = currentMember[memberNameIndex + 1];
+            if (targetL === currentLast) {
+                if (targetF === currentFirst) {
+                    results[0] = true;
+                    resultsArray.push(currentMember);
+                }
+            }
+        }
+    });
+}
+
+function searchSquare(membersArray, targetF, targetL) {
+    squareArray.forEach((currentCustomer, index) => {
+        
+        if (currentCustomer[11] != null) {
+            
+            var customerNames = currentCustomer[11].split(" ");
+            var currentFirst = customerNames[0];
+            var currentLast = customerNames[1];
+            // console.log(currentLast);
+            // console.log(index + "\n");
+            // console.log(currentCustomer);
+
+            if (targetL === currentLast) {
+                console.log(currentFirst + " " + currentLast);
+                if (targetF === currentFirst) {
+                    results[1] = true;
+                    // resultsArray.push(currentMember);
+                }
+            }
+        }
+    });
+}
 
 
 
@@ -14,6 +93,7 @@ console.log(SquareArray);
 
 /**
  * Handles loading of the file from the computer
+ * Code belongs to some random dude on the internet fuck
  * 
  * @param URL that is being loaded
  * @returns void
